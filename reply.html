@@ -23,36 +23,50 @@
     .section {
       margin-bottom: 30px;
     }
-    input {
-      padding: 10px;
-      font-size: 1rem;
-      width: 100%;
-      margin-top: 10px;
-      margin-bottom: 10px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
+    a {
+      color: #3aafa9;
+      text-decoration: none;
     }
     .button {
       background-color: #3aafa9;
       color: white;
       padding: 10px 20px;
-      border: none;
+      text-align: center;
+      display: inline-block;
       border-radius: 6px;
+      margin-top: 10px;
       cursor: pointer;
+      border: none;
       font-size: 1rem;
     }
-    .response {
-      margin-top: 20px;
+    form {
       background: white;
-      padding: 15px;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-top: 15px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+    .note {
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 5px;
+    }
+    .response {
+      background: white;
+      padding: 20px;
       border-left: 4px solid #3aafa9;
       border-radius: 8px;
-      box-shadow: 0 1px 5px rgba(0,0,0,0.1);
-    }
-    a {
-      color: #3aafa9;
-      text-decoration: none;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-top: 20px;
     }
   </style>
 </head>
@@ -60,17 +74,35 @@
 
   <header>
     <h1>MindBridge</h1>
-    <p>Use your message code to check if we’ve replied.</p>
+    <p>Your space to reflect, share, and feel heard — anonymously.</p>
   </header>
 
   <div class="section">
-    <h2>Enter Your Code</h2>
-    <p>We respond thoughtfully to every message. Please enter the code you received after submitting your message:</p>
+    <h2>Check for a Response</h2>
+    <p>If you've already submitted a message, enter the code you were given below to see our reply.</p>
 
-    <input type="text" id="codeInput" placeholder="e.g. X7B2KQ" />
-    <button class="button" onclick="lookupReply()">Check for Reply</button>
+    <form onsubmit="event.preventDefault(); lookupReply();">
+      <label for="code">Enter your message code:</label>
+      <input type="text" id="code" name="code" placeholder="e.g. X7B2KQ" required />
+      <button type="submit" class="button">Check Response</button>
+      <p class="note">* Message codes are case-insensitive.</p>
+    </form>
 
-    <div class="response" id="responseBox" style="display:none;"></div>
+    <div class="response" id="responseBox" style="display: none;"></div>
+  </div>
+
+  <div class="section">
+    <h2>Helpful Resources</h2>
+    <ul>
+      <li><a href="https://988lifeline.org/" target="_blank">988 Suicide & Crisis Lifeline</a></li>
+      <li><a href="https://www.nimh.nih.gov/health/topics/caring-for-your-mental-health" target="_blank">NIMH – Mental Health Tips</a></li>
+      <li><a href="https://www.crisistextline.org/" target="_blank">Crisis Text Line (Text HOME to 741741)</a></li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Disclaimer</h2>
+    <p>This site is for informational and peer support purposes only. It does not provide clinical mental health treatment or emergency services.</p>
   </div>
 
   <script>
@@ -81,17 +113,18 @@
     };
 
     function lookupReply() {
-      const code = document.getElementById("codeInput").value.toUpperCase().trim();
-      const box = document.getElementById("responseBox");
+      const input = document.getElementById("code").value.toUpperCase().trim();
+      const responseBox = document.getElementById("responseBox");
 
-      if (responses[code]) {
-        box.innerText = responses[code];
-        box.style.display = "block";
+      if (responses[input]) {
+        responseBox.innerText = responses[input];
       } else {
-        box.innerText = "No response found for this code yet. Check back later!";
-        box.style.display = "block";
+        responseBox.innerText = "No response found for this code yet. Check back later!";
       }
+
+      responseBox.style.display = "block";
     }
   </script>
+
 </body>
 </html>

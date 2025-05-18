@@ -46,15 +46,14 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       margin-top: 15px;
     }
-    textarea {
+    textarea, input[type="email"] {
       width: 100%;
-      min-height: 100px;
       padding: 10px;
       font-size: 1rem;
       border-radius: 6px;
       border: 1px solid #ccc;
-      resize: vertical;
       box-sizing: border-box;
+      margin-bottom: 10px;
       font-family: inherit;
     }
     label {
@@ -86,18 +85,16 @@
   </header>
 
   <div class="section">
-    <h2>Our Mission</h2>
-    <p>This site is a student-led project offering anonymous peer support. Whether you're feeling overwhelmed, anxious, or just need to let something out — we're here to listen.</p>
-    <p><strong>Note:</strong> We are not licensed therapists. If you're in crisis, please contact a professional hotline listed below.</p>
-  </div>
-
-  <div class="section">
     <h2>Submit Your Message</h2>
     <form id="messageForm" action="https://formspree.io/f/xkgryydn" method="POST" target="hidden_iframe" onsubmit="generateCode()">
       <label for="message">Your Message (anonymous):</label>
       <textarea id="message" name="message" placeholder="Write whatever's on your mind..." required></textarea>
+
+      <label for="email">Your Email (optional):</label>
+      <input type="email" id="email" name="email" placeholder="you@example.com" />
+
       <button type="submit" class="button">Send Message</button>
-      <p class="note">* Your message is anonymous and securely submitted to our inbox.</p>
+      <p class="note">* Your message is anonymous. You can include your email if you'd like a personal reply.</p>
     </form>
 
     <iframe name="hidden_iframe" style="display:none;"></iframe>
@@ -105,7 +102,10 @@
     <div id="codeBox">
       <strong>Your Message Code:</strong>
       <p id="messageCode"></p>
-      <p class="note">Save this code to check for a response later on the <a href="reply.html">reply page</a>.</p>
+      <p class="note">You can check for a response later using this code.</p>
+      <p class="note">Or bookmark this link to go straight to your reply:
+        <br><a id="replyLink" href="#" target="_blank">reply.html?code=</a>
+      </p>
     </div>
   </div>
 
@@ -127,9 +127,4 @@
     function generateCode() {
       const code = Math.random().toString(36).substring(2, 8).toUpperCase();
       document.getElementById("messageCode").innerText = code;
-      document.getElementById("codeBox").style.display = "block";
-    }
-  </script>
-
-</body>
-</html>
+      document.getElementById("replyLink").innerText = `reply.html

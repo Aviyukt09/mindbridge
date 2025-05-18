@@ -81,4 +81,60 @@
     <h2>Check for a Response</h2>
     <form onsubmit="event.preventDefault(); lookupReply();">
       <label for="code">Enter your message code:</label>
-      <input type
+      <input type="text" id="code" name="code" placeholder="e.g. X7B2KQ" required />
+      <button type="submit" class="button">Check Response</button>
+      <p class="note">* Message codes are case-insensitive. If you followed a link with a code, it should auto-load below.</p>
+    </form>
+
+    <div class="response" id="responseBox" style="display: none;"></div>
+  </div>
+
+  <div class="section">
+    <h2>Helpful Resources</h2>
+    <ul>
+      <li><a href="https://988lifeline.org/" target="_blank">988 Suicide & Crisis Lifeline</a></li>
+      <li><a href="https://www.nimh.nih.gov/health/topics/caring-for-your-mental-health" target="_blank">NIMH – Mental Health Tips</a></li>
+      <li><a href="https://www.crisistextline.org/" target="_blank">Crisis Text Line (Text HOME to 741741)</a></li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Disclaimer</h2>
+    <p>This site is for informational and peer support purposes only. It does not provide clinical mental health treatment or emergency services.</p>
+  </div>
+
+  <script>
+    // Your response lookup dictionary
+    const responses = {
+      "X7B2KQ": "Hey! Thanks for reaching out. You're not alone — we're listening. 💙",
+      "M4K2W1": "Take a deep breath. We're proud of you for opening up. Stay strong.",
+      "A1B2C3": "Remember to take breaks and speak kindly to yourself."
+    };
+
+    // Main response lookup function
+    function lookupReply(codeInput) {
+      const code = (codeInput || document.getElementById("code").value).toUpperCase().trim();
+      const box = document.getElementById("responseBox");
+
+      if (responses[code]) {
+        box.innerText = responses[code];
+      } else {
+        box.innerText = "No response found for this code yet. Check back later!";
+      }
+
+      box.style.display = "block";
+    }
+
+    // Auto-load code from URL if present
+    window.onload = function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      const codeParam = urlParams.get("code");
+      if (codeParam) {
+        document.getElementById("code").value = codeParam;
+        lookupReply(codeParam);
+      }
+    };
+  </script>
+
+</body>
+</html>

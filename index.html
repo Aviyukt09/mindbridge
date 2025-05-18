@@ -100,7 +100,10 @@
     <div id="codeBox">
       <strong>Your Message Code:</strong>
       <p id="messageCode"></p>
-      <p class="note">Save this code to check for a response later on the <a id="replyLink" href="#" target="_blank">reply page</a>.</p>
+      <p class="note">You can check for a response later using this code.</p>
+      <p class="note">Or bookmark this link to go straight to your reply:
+        <br><a id="replyLink" href="#" target="_blank">reply.html?code=</a>
+      </p>
     </div>
   </div>
 
@@ -119,6 +122,8 @@
   </div>
 
   <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbzhmLp2mhzVu39zXpomvKERNhaZeIAUGDEOStu8h2D-7tev0wAqdyVbvfI1EvbTu7AO/exec";
+
     document.getElementById("messageForm").addEventListener("submit", function(event) {
       event.preventDefault();
 
@@ -126,20 +131,20 @@
       const message = document.getElementById("message").value.trim();
       const email = document.getElementById("email").value.trim();
 
-      // Show the code
+      // Display the code to the user
       document.getElementById("messageCode").innerText = code;
       document.getElementById("replyLink").innerText = `reply.html?code=${code}`;
       document.getElementById("replyLink").href = `reply.html?code=${code}`;
       document.getElementById("codeBox").style.display = "block";
 
-      // Send to Formspree via fetch
-      fetch("https://formspree.io/f/xkgryydn", {
+      // Send to Google Apps Script
+      fetch(scriptURL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          code: code,
           message: message,
-          email: email || "(no email provided)",
-          code: code
+          email: email || "(no email provided)"
         })
       }).then(() => {
         document.getElementById("messageForm").reset();

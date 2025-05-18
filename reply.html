@@ -31,13 +31,10 @@
       background-color: #3aafa9;
       color: white;
       padding: 10px 20px;
-      text-align: center;
-      display: inline-block;
-      border-radius: 6px;
-      margin-top: 10px;
-      cursor: pointer;
       border: none;
+      border-radius: 6px;
       font-size: 1rem;
+      cursor: pointer;
     }
     form {
       background: white;
@@ -58,7 +55,6 @@
     .note {
       font-size: 0.9rem;
       color: #555;
-      margin-top: 5px;
     }
     .response {
       background: white;
@@ -81,9 +77,9 @@
     <h2>Check for a Response</h2>
     <form onsubmit="event.preventDefault(); lookupReply();">
       <label for="code">Enter your message code:</label>
-      <input type="text" id="code" name="code" placeholder="e.g. X7B2KQ" required />
-      <button type="submit" class="button">Check Response</button>
-      <p class="note">* Message codes are case-insensitive. If you followed a link with a code, it should auto-load below.</p>
+      <input type="text" id="code" placeholder="e.g. X7B2KQ" required />
+      <button class="button" type="submit">Check Response</button>
+      <p class="note">If you followed a special link, the code will auto-fill.</p>
     </form>
 
     <div class="response" id="responseBox" style="display: none;"></div>
@@ -104,36 +100,44 @@
   </div>
 
   <script>
-    // Your response lookup dictionary
-    const responses = {
-      "X7B2KQ": "Hey! Thanks for reaching out. You're not alone — we're listening. 💙",
-      "M4K2W1": "Take a deep breath. We're proud of you for opening up. Stay strong.",
-      "A1B2C3": "Remember to take breaks and speak kindly to yourself."
-    };
+    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQZgOjumFZrHLo8pfNyVEu6-3Ie41nlZD6cCL7S22hfgWFoxzkjFJZbOSfWHI_FehEL7V31hKzTQKEr/pub?output=csv";
 
-    // Main response lookup function
-    function lookupReply(codeInput) {
-      const code = (codeInput || document.getElementById("code").value).toUpperCase().trim();
-      const box = document.getElementById("responseBox");
+    let responseData = {};
 
-      if (responses[code]) {
-        box.innerText = responses[code];
-      } else {
-        box.innerText = "No response found for this code yet. Check back later!";
-      }
+    function loadResponses() {
+      fetch(sheetURL)
+        .then(res => res.text())
+        .then(text => {
+          const rows = text.split("\n").slice(1);
+          rows.forEach(row => {
+            const [code, reply] = row.split(",").map(cell => cell.trim().replace(/^"|"$/g, ""));
+            if (code && reply) {
+              responseData[code.toUpperCase()] = reply;
+            }
+          });
 
-      box.style.display = "block";
+          // If URL has code, check it
+          const urlCode = new URLSearchParams(window.location.search).get("code");
+          if (urlCode) {
+            document.getElementById("code").value = urlCode;
+            lookupReply();
+          }
+        });
     }
 
-    // Auto-load code from URL if present
-    window.onload = function () {
-      const urlParams = new URLSearchParams(window.location.search);
-      const codeParam = urlParams.get("code");
-      if (codeParam) {
-        document.getElementById("code").value = codeParam;
-        lookupReply(codeParam);
+    function lookupReply() {
+      const code = document.getElementById("code").value.trim().toUpperCase();
+      const box = document.getElementById("responseBox");
+      box.style.display = "block";
+
+      if (responseData[code]) {
+        box.textContent = responseData[code];
+      } else {
+        box.textContent = "No response found for this code yet. Check back soon!";
       }
-    };
+    }
+
+    window.onload = loadResponses;
   </script>
 
 </body>

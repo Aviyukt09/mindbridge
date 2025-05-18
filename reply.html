@@ -8,17 +8,30 @@
       font-family: Arial, sans-serif;
       background-color: #f4f9f9;
       color: #333;
+      line-height: 1.6;
       padding: 20px;
-      max-width: 600px;
+      max-width: 800px;
       margin: auto;
+    }
+    header {
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #2b7a78;
+    }
+    .section {
+      margin-bottom: 30px;
     }
     input {
       padding: 10px;
       font-size: 1rem;
       width: 100%;
+      margin-top: 10px;
       margin-bottom: 10px;
       border-radius: 6px;
       border: 1px solid #ccc;
+      box-sizing: border-box;
     }
     .button {
       background-color: #3aafa9;
@@ -37,16 +50,28 @@
       border-radius: 8px;
       box-shadow: 0 1px 5px rgba(0,0,0,0.1);
     }
+    a {
+      color: #3aafa9;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
-  <h1>Check Your Reply</h1>
-  <p>Enter the code you received after submitting your message.</p>
 
-  <input type="text" id="codeInput" placeholder="Enter your code (e.g. X7B2KQ)" />
-  <button class="button" onclick="lookupReply()">Check</button>
+  <header>
+    <h1>MindBridge</h1>
+    <p>Use your message code to check if we’ve replied.</p>
+  </header>
 
-  <div class="response" id="responseBox" style="display:none;"></div>
+  <div class="section">
+    <h2>Enter Your Code</h2>
+    <p>We respond thoughtfully to every message. Please enter the code you received after submitting your message:</p>
+
+    <input type="text" id="codeInput" placeholder="e.g. X7B2KQ" />
+    <button class="button" onclick="lookupReply()">Check for Reply</button>
+
+    <div class="response" id="responseBox" style="display:none;"></div>
+  </div>
 
   <script>
     const responses = {

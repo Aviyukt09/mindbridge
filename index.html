@@ -86,7 +86,7 @@
 
   <div class="section">
     <h2>Submit Your Message</h2>
-    <form id="messageForm" action="https://formspree.io/f/xkgryydn" method="POST" target="hidden_iframe" onsubmit="generateCode()">
+    <form id="messageForm">
       <label for="message">Your Message (anonymous):</label>
       <textarea id="message" name="message" placeholder="Write whatever's on your mind..." required></textarea>
 
@@ -97,15 +97,10 @@
       <p class="note">* Your message is anonymous. You can include your email if you'd like a personal reply.</p>
     </form>
 
-    <iframe name="hidden_iframe" style="display:none;"></iframe>
-
     <div id="codeBox">
       <strong>Your Message Code:</strong>
       <p id="messageCode"></p>
-      <p class="note">You can check for a response later using this code.</p>
-      <p class="note">Or bookmark this link to go straight to your reply:
-        <br><a id="replyLink" href="#" target="_blank">reply.html?code=</a>
-      </p>
+      <p class="note">Save this code to check for a response later on the <a id="replyLink" href="#" target="_blank">reply page</a>.</p>
     </div>
   </div>
 
@@ -124,7 +119,33 @@
   </div>
 
   <script>
-    function generateCode() {
+    document.getElementById("messageForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
       const code = Math.random().toString(36).substring(2, 8).toUpperCase();
+      const message = document.getElementById("message").value.trim();
+      const email = document.getElementById("email").value.trim();
+
+      // Show the code
       document.getElementById("messageCode").innerText = code;
-      document.getElementById("replyLink").innerText = `reply.html
+      document.getElementById("replyLink").innerText = `reply.html?code=${code}`;
+      document.getElementById("replyLink").href = `reply.html?code=${code}`;
+      document.getElementById("codeBox").style.display = "block";
+
+      // Send to Formspree via fetch
+      fetch("https://formspree.io/f/xkgryydn", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: message,
+          email: email || "(no email provided)",
+          code: code
+        })
+      }).then(() => {
+        document.getElementById("messageForm").reset();
+      });
+    });
+  </script>
+
+</body>
+</html>
